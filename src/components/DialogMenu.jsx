@@ -30,6 +30,13 @@ const DialogMenu = ({ item, category }) => {
   const [typeModal, setTypeModal] = useState("");
   const [taskName, setTaskName] = useState("");
   const [progressPercentage, setProgressPercentage] = useState(0);
+  const validationPercentage = (e) => {
+    const value = e.target.value;
+    const regex = /^(100|[0-9]{1,2})$/;
+    if (regex.test(value) || value === "") {
+      setProgressPercentage(Number(value));
+    }
+  };
   const showToast = (title, description, status) => {
     toast({
       title,
@@ -164,7 +171,7 @@ const DialogMenu = ({ item, category }) => {
                 type="text"
                 width="100px"
                 placeholder="70%"
-                onChange={(e) => setProgressPercentage(Number(e.target.value))}
+                onChange={(e) => validationPercentage(e)}
                 value={progressPercentage}
               />
             </FormControl>
