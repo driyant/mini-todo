@@ -91,6 +91,9 @@ const DialogMenu = ({ item, category }) => {
         } else if (progressPercentage === 100) {
           updateCompleted({ id, name: taskName, progressPercentage });
           deleteTaskTodo(id);
+        } else {
+          updateTodo({ id, name: taskName, progressPercentage });
+          deleteTaskTodo(id);
         }
       } else if (category === "In Progress") {
         if (progressPercentage >= 1 && progressPercentage < 100) {
@@ -110,10 +113,12 @@ const DialogMenu = ({ item, category }) => {
         } else if (progressPercentage === 0) {
           updateTodo({ id, name: taskName, progressPercentage });
           deleteTaskCompleted(id);
-        } else if (progressPercentage === 100) {
-          showToast("Warning", "Task already completed", "warning");
+        } else {
+          updateCompleted({ id, name: taskName, progressPercentage });
+          deleteTaskCompleted(id);
         }
       }
+      showToast("Success", "Task has been updated!", "success");
     } catch (error) {
       console.log(error);
       showToast("Error", "Semething went wrong", "error");
