@@ -13,43 +13,106 @@ import {
 import SettingButton from "./SettingButton";
 import DialogModal from "./DialogModal";
 import useStore from "../store";
+import { useToast } from "@chakra-ui/react";
 
 const DialogMenu = ({ item, category }) => {
+  const toast = useToast();
   const todos = useStore((state) => state.todos);
   const inProgress = useStore((state) => state.inProgress);
   const completed = useStore((state) => state.completed);
   const deleteTaskTodo = useStore((state) => state.deleteTaskTodo);
   const deleteTaskInProgress = useStore((state) => state.deleteTaskInProgress);
   const deleteTaskCompleted = useStore((state) => state.deleteTaskCompleted);
+  const updateTodo = useStore((state) => state.updateTodo);
+  const updateInProgress = useStore((state) => state.updateInProgress);
+  const updateCompleted = useStore((state) => state.updateCompleted);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [typeModal, setTypeModal] = useState("");
   const [taskName, setTaskName] = useState("");
   const [progressPercentage, setProgressPercentage] = useState(0);
+  const showToast = (title, description, status) => {
+    toast({
+      title,
+      description,
+      status,
+      duration: 2000,
+      isClosable: true,
+    });
+  };
   const getModalClose = () => {
     setModalIsOpen(false);
   };
   const deleteHandler = (id, category) => {
-    if (category === "TODO") {
-      deleteTaskTodo(id);
-    } else if (category === "In Progress") {
-      deleteTaskInProgress(id);
-    } else if (category === "Completed") {
-      deleteTaskCompleted(id);
+    try {
+      if (category === "TODO") {
+        deleteTaskTodo(id);
+      } else if (category === "In Progress") {
+        deleteTaskInProgress(id);
+      } else if (category === "Completed") {
+        deleteTaskCompleted(id);
+      }
+      showToast("Success", "Task has been deleted!", "success");
+    } catch (error) {
+      console.log(error);
+      showToast("Error", error.message, "error");
+    } finally {
+      setModalIsOpen(false);
     }
-    setModalIsOpen(!modalIsOpen);
   };
-  const getSingleTask = (itemId) => {
-    console.log("get task: " + itemId);
+  const getSingleTask = (id, category) => {
+    if (category === "TODO") {
+      const todo = todos.find((item) => item.id === id);
+      setTaskName(todo.name);
+      setProgressPercentage(todo.progressPercentage);
+    } else if (category === "In Progress") {
+      const todoInProgress = inProgress.find((item) => item.id === id);
+      setTaskName(todoInProgress.name);
+      setProgressPercentage(todoInProgress.progressPercentage);
+    } else if (category === "Completed") {
+      const todoCompleted = completed.find((item) => item.id === id);
+      setTaskName(todoCompleted.name);
+      setProgressPercentage(todoCompleted.progressPercentage);
+    }
   };
-  const updateHandler = (e, itemId) => {
+  const updateHandler = (e, id, category) => {
     e.preventDefault();
-    console.log("update: " + itemId);
-  };
-  const moveRightHandler = () => {
-    console.log("Move right!");
-  };
-  const leftHandler = () => {
-    console.log("Move left!");
+    try {
+      if (category === "TODO") {
+        if (progressPercentage >= 1 && progressPercentage < 100) {
+          updateInProgress({ id, name: taskName, progressPercentage });
+          deleteTaskTodo(id);
+        } else if (progressPercentage === 100) {
+          updateCompleted({ id, name: taskName, progressPercentage });
+          deleteTaskTodo(id);
+        }
+      } else if (category === "In Progress") {
+        if (progressPercentage >= 1 && progressPercentage < 100) {
+          updateInProgress({ id, name: taskName, progressPercentage });
+          deleteTaskInProgress(id);
+        } else if (progressPercentage === 100) {
+          updateCompleted({ id, name: taskName, progressPercentage });
+          deleteTaskInProgress(id);
+        } else if (progressPercentage === 0) {
+          updateTodo({ id, name: taskName, progressPercentage });
+          deleteTaskInProgress(id);
+        }
+      } else if (category === "Completed") {
+        if (progressPercentage >= 1 && progressPercentage < 100) {
+          updateInProgress({ id, name: taskName, progressPercentage });
+          deleteTaskCompleted(id);
+        } else if (progressPercentage === 0) {
+          updateTodo({ id, name: taskName, progressPercentage });
+          deleteTaskCompleted(id);
+        } else if (progressPercentage === 100) {
+          showToast("Warning", "Task already completed", "warning");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      showToast("Error", "Semething went wrong", "error");
+    } finally {
+      setModalIsOpen(false);
+    }
   };
   return (
     <>
@@ -58,13 +121,11 @@ const DialogMenu = ({ item, category }) => {
           <SettingButton />
         </MenuButton>
         <MenuList marginLeft="1rem">
-          <MenuItem onClick={moveRightHandler}>Move Right</MenuItem>
-          <MenuItem onClick={leftHandler}>Move Left</MenuItem>
           <MenuItem
             onClick={() => {
               setTypeModal("edit");
               setModalIsOpen(!modalIsOpen);
-              // getSingleTask(id, todoId);
+              getSingleTask(item.id, category);
             }}
           >
             Edit
@@ -81,12 +142,14 @@ const DialogMenu = ({ item, category }) => {
       </Menu>
       {typeModal === "edit" && (
         <DialogModal
-          title="Edit Task"
+          title={`Edit Task: ${category}`}
           modalIsOpen={modalIsOpen}
           modalIsClose={getModalClose}
           updateHandler={updateHandler}
+          item={item}
+          category={category}
         >
-          <form onSubmit={updateHandler}>
+          <form>
             <FormControl mb="1rem">
               <FormLabel>Task Name</FormLabel>
               <Input
@@ -101,8 +164,7 @@ const DialogMenu = ({ item, category }) => {
                 type="text"
                 width="100px"
                 placeholder="70%"
-                disabled={true}
-                onChange={(e) => setProgressPercentage(e.target.value)}
+                onChange={(e) => setProgressPercentage(Number(e.target.value))}
                 value={progressPercentage}
               />
             </FormControl>

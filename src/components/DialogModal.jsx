@@ -9,7 +9,7 @@ import {
   Button,
   ModalCloseButton,
 } from "@chakra-ui/react";
-// import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 const DialogModal = ({
   title,
@@ -19,6 +19,8 @@ const DialogModal = ({
   createTaskHandler,
   deleteHandler,
   updateHandler,
+  item,
+  category,
 }) => {
   const getFirstTitle = title.split(" ")[0].toLowerCase();
   return (
@@ -27,27 +29,30 @@ const DialogModal = ({
         <ModalOverlay />
         <ModalContent>
           <ModalHeader display="flex" alignItems="center">
-            {/* {getFirstTitle === "delete" && (
+            {getFirstTitle === "delete" && (
               <DeleteIcon boxSize={5} color="red" marginRight="0.5rem" />
-            )} */}
+            )}
             {title}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>{children}</ModalBody>
-          <ModalFooter paddingRight="0">
+          <ModalFooter>
             <Button marginRight="1rem" onClick={modalIsClose}>
               Close
             </Button>
-            {(getFirstTitle === "create" || getFirstTitle === "edit") && (
+            {getFirstTitle === "create" && (
               <Button
                 type="submit"
                 colorScheme="blue"
                 mr={3}
-                onClick={
-                  getFirstTitle === "create" ? createTaskHandler : updateHandler
-                }
+                onClick={createTaskHandler}
               >
-                Save Task
+                Create
+              </Button>
+            )}
+            {getFirstTitle === "edit" && (
+              <Button onClick={(e) => updateHandler(e, item.id, category)}>
+                Update
               </Button>
             )}
             {getFirstTitle === "delete" && (

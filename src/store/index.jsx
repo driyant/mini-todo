@@ -64,6 +64,48 @@ const useStore = create((set) => ({
     set((state) => ({
       completed: state.completed.filter((item) => item.id !== id),
     })),
+  updateTodo: ({ id, name, progressPercentage }) => {
+    set((state) => ({
+      todos: state.todos.filter((item) => item.id !== id),
+    }));
+    const newId = generateRandomId();
+    const newTask = {
+      id: newId,
+      name,
+      progressPercentage,
+    };
+    set((state) => ({
+      todos: [newTask, ...state.todos],
+    }));
+  },
+  updateInProgress: ({ id, name, progressPercentage }) => {
+    set((state) => ({
+      inProgress: state.inProgress.filter((item) => item.id !== id),
+    }));
+    const newId = generateRandomId();
+    const newTask = {
+      id: newId,
+      name,
+      progressPercentage,
+    };
+    set((state) => ({
+      inProgress: [newTask, ...state.inProgress],
+    }));
+  },
+  updateCompleted: ({ id, name, progressPercentage }) => {
+    set((state) => ({
+      completed: state.completed.filter((item) => item.id !== id),
+    }));
+    const newId = generateRandomId();
+    const newTask = {
+      id: newId,
+      name,
+      progressPercentage,
+    };
+    set((state) => ({
+      completed: [newTask, ...state.completed],
+    }));
+  },
 }));
 
 export default useStore;

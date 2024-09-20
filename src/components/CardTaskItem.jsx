@@ -1,7 +1,5 @@
 /* eslint-disable react/prop-types */
-// import React from "react";
 import { Box, Text, Progress } from "@chakra-ui/react";
-// import { CheckCircleIcon } from "@chakra-ui/react";
 import DialogMenu from "./DialogMenu";
 
 const CardTaskItem = ({ items, title: category }) => {
