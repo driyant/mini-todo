@@ -23,16 +23,18 @@ function App() {
         </Heading>
         <ButtonNewTask />
       </Box>
-      <Grid
+      <Box
         height="auto"
         padding="24px"
-        templateColumns="repeat(4, 1fr)"
-        gap={8}
+        display="flex"
+        flexFlow={{ base: "column", lg: "row" }}
+        gap={5}
+        width="100%"
       >
         <CardTodo title={"TODO"} items={todos} />
         <CardTodo title={"In Progress"} items={inProgress} />
         <CardTodo title={"Completed"} items={completed} />
-      </Grid>
+      </Box>
     </>
   );
 }

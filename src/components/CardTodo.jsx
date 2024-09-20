@@ -6,7 +6,7 @@ const CardTodo = ({ title, items }) => {
   return (
     <>
       <GridItem
-        width="326px"
+        width="100%"
         border={`1px solid #4DB5BC`}
         padding="16px"
         borderRadius="4px"
