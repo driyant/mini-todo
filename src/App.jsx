@@ -1,4 +1,4 @@
-import { Box, Grid, Heading } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 import CardTodo from "./components/CardTodo";
 import useStore from "./store";
 import ButtonNewTask from "./components/ButtonNewTask";
