@@ -12,14 +12,15 @@ import {
 } from "@chakra-ui/react";
 import SettingButton from "./SettingButton";
 import DialogModal from "./DialogModal";
-// import {
-//   deleteTaskItem,
-//   getSingeItem,
-//   updateSingleItem,
-//   createTask,
-// } from "../store/action";
+import useStore from "../store";
 
-const DialogMenu = ({ itemId, todoId }) => {
+const DialogMenu = ({ item, category }) => {
+  const todos = useStore((state) => state.todos);
+  const inProgress = useStore((state) => state.inProgress);
+  const completed = useStore((state) => state.completed);
+  const deleteTaskTodo = useStore((state) => state.deleteTaskTodo);
+  const deleteTaskInProgress = useStore((state) => state.deleteTaskInProgress);
+  const deleteTaskCompleted = useStore((state) => state.deleteTaskCompleted);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [typeModal, setTypeModal] = useState("");
   const [taskName, setTaskName] = useState("");
@@ -27,8 +28,15 @@ const DialogMenu = ({ itemId, todoId }) => {
   const getModalClose = () => {
     setModalIsOpen(false);
   };
-  const deleteHandler = (id) => {
-    console.log("delete: " + id);
+  const deleteHandler = (id, category) => {
+    if (category === "TODO") {
+      deleteTaskTodo(id);
+    } else if (category === "In Progress") {
+      deleteTaskInProgress(id);
+    } else if (category === "Completed") {
+      deleteTaskCompleted(id);
+    }
+    setModalIsOpen(!modalIsOpen);
   };
   const getSingleTask = (itemId) => {
     console.log("get task: " + itemId);
@@ -56,7 +64,7 @@ const DialogMenu = ({ itemId, todoId }) => {
             onClick={() => {
               setTypeModal("edit");
               setModalIsOpen(!modalIsOpen);
-              getSingleTask(itemId, todoId);
+              // getSingleTask(id, todoId);
             }}
           >
             Edit
@@ -106,7 +114,7 @@ const DialogMenu = ({ itemId, todoId }) => {
           title="Delete Task"
           modalIsOpen={modalIsOpen}
           modalIsClose={getModalClose}
-          deleteHandler={deleteHandler}
+          deleteHandler={() => deleteHandler(item.id, category)}
         >
           <Text>
             {

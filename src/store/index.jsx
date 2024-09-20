@@ -52,6 +52,18 @@ const useStore = create((set) => ({
         ...state.todos,
       ],
     })),
+  deleteTaskTodo: (id) =>
+    set((state) => ({
+      todos: state.todos.filter((item) => item.id !== id),
+    })),
+  deleteTaskInProgress: (id) =>
+    set((state) => ({
+      inProgress: state.inProgress.filter((item) => item.id !== id),
+    })),
+  deleteTaskCompleted: (id) =>
+    set((state) => ({
+      completed: state.completed.filter((item) => item.id !== id),
+    })),
 }));
 
 export default useStore;

@@ -4,7 +4,7 @@ import { Box, Text, Progress } from "@chakra-ui/react";
 // import { CheckCircleIcon } from "@chakra-ui/react";
 import DialogMenu from "./DialogMenu";
 
-const CardTaskItem = ({ items }) => {
+const CardTaskItem = ({ items, title: category }) => {
   return (
     <>
       {items.map((item) => {
@@ -37,7 +37,7 @@ const CardTaskItem = ({ items }) => {
                   {item.progressPercentage}%
                 </Text>
               </Box>
-              <DialogMenu itemId={item.id} todoId={item.todo_id} />
+              <DialogMenu item={item} category={category} />
             </Box>
           </Box>
         );
