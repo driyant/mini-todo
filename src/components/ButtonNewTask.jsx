@@ -11,9 +11,11 @@ import {
 import DialogModal from "./DialogModal";
 import { AddIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
+import useStore from "../store";
 
 const ButtonNewTask = () => {
   const toast = useToast();
+  const addTask = useStore((state) => state.addTask);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [taskName, setTaskName] = useState("");
   const getModalOpen = () => {
@@ -40,6 +42,17 @@ const ButtonNewTask = () => {
       progressPercentage: 0,
     };
     console.log(obj);
+    addTask(obj);
+    setModalIsOpen(false);
+    setTaskName("");
+    toast({
+      title: "Success",
+      description: "New task has been added!",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+      position: "bottom",
+    });
   };
   return (
     <>

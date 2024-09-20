@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { generateRandomId } from "../utils";
 
 const useStore = create((set) => ({
   todos: [
@@ -40,6 +41,17 @@ const useStore = create((set) => ({
       progressPercentage: 100,
     },
   ],
+  addTask: ({ name, progressPercentage }) =>
+    set((state) => ({
+      todos: [
+        {
+          id: generateRandomId(),
+          name,
+          progressPercentage: progressPercentage,
+        },
+        ...state.todos,
+      ],
+    })),
 }));
 
 export default useStore;
