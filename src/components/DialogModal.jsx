@@ -22,7 +22,7 @@ const DialogModal = ({
   item,
   category,
 }) => {
-  const getFirstTitle = title.split(" ")[0].toLowerCase();
+  const getFirstTitle = title?.split(" ")[0].toLowerCase();
   return (
     <>
       <Modal isOpen={modalIsOpen} onClose={modalIsClose}>
