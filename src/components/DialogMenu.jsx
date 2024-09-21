@@ -87,36 +87,30 @@ const DialogMenu = ({ item, category }) => {
       if (category === "TODO") {
         if (progressPercentage >= 1 && progressPercentage < 100) {
           updateInProgress({ id, name: taskName, progressPercentage });
-          deleteTaskTodo(id);
         } else if (progressPercentage === 100) {
           updateCompleted({ id, name: taskName, progressPercentage });
-          deleteTaskTodo(id);
         } else {
           updateTodo({ id, name: taskName, progressPercentage });
-          deleteTaskTodo(id);
         }
+        deleteTaskTodo(id);
       } else if (category === "In Progress") {
         if (progressPercentage >= 1 && progressPercentage < 100) {
           updateInProgress({ id, name: taskName, progressPercentage });
-          deleteTaskInProgress(id);
         } else if (progressPercentage === 100) {
           updateCompleted({ id, name: taskName, progressPercentage });
-          deleteTaskInProgress(id);
         } else if (progressPercentage === 0) {
           updateTodo({ id, name: taskName, progressPercentage });
-          deleteTaskInProgress(id);
         }
+        deleteTaskInProgress(id);
       } else if (category === "Completed") {
         if (progressPercentage >= 1 && progressPercentage < 100) {
           updateInProgress({ id, name: taskName, progressPercentage });
-          deleteTaskCompleted(id);
         } else if (progressPercentage === 0) {
           updateTodo({ id, name: taskName, progressPercentage });
-          deleteTaskCompleted(id);
         } else {
           updateCompleted({ id, name: taskName, progressPercentage });
-          deleteTaskCompleted(id);
         }
+        deleteTaskCompleted(id);
       }
       showToast("Success", "Task has been updated!", "success");
     } catch (error) {
